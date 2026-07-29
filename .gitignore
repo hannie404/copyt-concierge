@@ -1,0 +1,13 @@
+node_modules
+.next
+.env
+.env.local
+.vercel
+supabase/.temp
+
+/docs
+
+/BRAND.md
+/BUILD_PROMPTS.md
+/DESIGN.md
+/SPEC.md

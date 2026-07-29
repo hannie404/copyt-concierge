@@ -1,0 +1,223 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-07-30T00:00:00Z",
+  "title": "Design System: Copyt Concierge",
+  "extensions": {
+    "colorMeta": {
+      "magenta": {
+        "role": "primary",
+        "displayName": "Signal Magenta",
+        "canonical": "#D71284",
+        "tonalRamp": [
+          "#3D0A22",
+          "#5C0F33",
+          "#8A1450",
+          "#B80E6F",
+          "#D71284",
+          "#F0459E",
+          "#FF4FB8",
+          "#FFB3DD"
+        ]
+      },
+      "magenta-hover": {
+        "role": "primary",
+        "displayName": "Signal Magenta Hover",
+        "canonical": "#B80E6F",
+        "tonalRamp": [
+          "#2E0719",
+          "#470B29",
+          "#6E0E42",
+          "#95105A",
+          "#B80E6F",
+          "#D71284",
+          "#F0459E",
+          "#FF4FB8"
+        ]
+      },
+      "magenta-light": {
+        "role": "primary",
+        "displayName": "Signal Magenta Light",
+        "canonical": "#FF4FB8",
+        "tonalRamp": [
+          "#4A0E2C",
+          "#701542",
+          "#A11D5D",
+          "#D12E7E",
+          "#FF4FB8",
+          "#FF75C7",
+          "#FF9DD8",
+          "#FFD6ED"
+        ]
+      },
+      "vault-dark": {
+        "role": "neutral",
+        "displayName": "Vault Dark",
+        "canonical": "#120212",
+        "tonalRamp": [
+          "#050005",
+          "#120212",
+          "#1E0A1F",
+          "#2E1730",
+          "#4A2E4D",
+          "#6E5471",
+          "#9B87A0",
+          "#D4CBD6"
+        ]
+      },
+      "ink": {
+        "role": "neutral",
+        "displayName": "Ink",
+        "canonical": "#0A0A0A",
+        "tonalRamp": [
+          "#0A0A0A",
+          "#1A1A1A",
+          "#2E2E2E",
+          "#474747",
+          "#666666",
+          "#8A8A8A",
+          "#B8B8B8",
+          "#E5E5E5"
+        ]
+      },
+      "slate": {
+        "role": "neutral",
+        "displayName": "Slate",
+        "canonical": "#6B7280",
+        "tonalRamp": [
+          "#1F2228",
+          "#374151",
+          "#4B5563",
+          "#6B7280",
+          "#9CA3AF",
+          "#C0C4CB",
+          "#DDE0E4",
+          "#F3F4F6"
+        ]
+      },
+      "pill-gray": {
+        "role": "neutral",
+        "displayName": "Pill Gray",
+        "canonical": "#F3F4F6",
+        "tonalRamp": [
+          "#9CA3AF",
+          "#B8BEC7",
+          "#D1D5DB",
+          "#E2E5E9",
+          "#F3F4F6",
+          "#F8F9FA",
+          "#FCFCFD",
+          "#FFFFFF"
+        ]
+      },
+      "status-received": { "role": "neutral", "displayName": "Status: Received", "canonical": "#9CA3AF" },
+      "status-authenticating": { "role": "tertiary", "displayName": "Status: Authenticating", "canonical": "#F59E0B" },
+      "status-flagged": { "role": "tertiary", "displayName": "Status: Flagged", "canonical": "#DC2626" },
+      "status-photographed": { "role": "tertiary", "displayName": "Status: Photographed", "canonical": "#3B82F6" },
+      "status-listed": { "role": "primary", "displayName": "Status: Listed", "canonical": "#D71284" },
+      "status-sold": { "role": "tertiary", "displayName": "Status: Sold", "canonical": "#10B981" },
+      "status-paid": { "role": "tertiary", "displayName": "Status: Paid", "canonical": "#047857" }
+    },
+    "typographyMeta": {
+      "display": { "displayName": "Display", "purpose": "Hero headlines only." },
+      "headline": { "displayName": "Headline", "purpose": "Section headings." },
+      "body": { "displayName": "Body", "purpose": "Paragraph copy, descriptions." },
+      "label": { "displayName": "Label", "purpose": "Stat captions, nav pill text, badges." }
+    },
+    "shadows": [
+      {
+        "name": "card-float",
+        "value": "0 12px 32px rgba(18, 2, 18, 0.18)",
+        "purpose": "Lifts the floating glass-card stat overlay off a dark background."
+      }
+    ],
+    "motion": [
+      {
+        "name": "ease-standard",
+        "value": "cubic-bezier(0.4, 0, 0.2, 1)",
+        "purpose": "Default easing for hover/focus state transitions."
+      }
+    ],
+    "breakpoints": [
+      { "name": "sm", "value": "640px" },
+      { "name": "md", "value": "768px" },
+      { "name": "lg", "value": "1024px" }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "Solid magenta pill CTA, uppercase + arrow in marketing contexts.",
+      "html": "<button class=\"ds-btn-primary\">Start free <span aria-hidden=\"true\">&rarr;</span></button>",
+      "css": ".ds-btn-primary { background: #D71284; color: #fff; padding: 14px 32px; border-radius: 9999px; font-weight: 700; border: none; transition: background 0.2s cubic-bezier(0.4,0,0.2,1); } .ds-btn-primary:hover { background: #B80E6F; } .ds-btn-primary:focus-visible { outline: 2px solid #D71284; outline-offset: 2px; }"
+    },
+    {
+      "name": "Outline Button",
+      "kind": "button",
+      "refersTo": "button-outline",
+      "description": "Transparent secondary button, ink border on light backgrounds.",
+      "html": "<button class=\"ds-btn-outline\">See how it works</button>",
+      "css": ".ds-btn-outline { background: transparent; color: #0A0A0A; border: 2px solid #0A0A0A; padding: 12px 30px; border-radius: 9999px; font-weight: 700; transition: background 0.2s cubic-bezier(0.4,0,0.2,1); } .ds-btn-outline:hover { background: rgba(10,10,10,0.06); } .ds-btn-outline:focus-visible { outline: 2px solid #0A0A0A; outline-offset: 2px; }"
+    },
+    {
+      "name": "Pill Nav Item",
+      "kind": "nav",
+      "refersTo": "pill-nav-item",
+      "description": "Light-gray rounded nav dropdown trigger.",
+      "html": "<button class=\"ds-pill-nav\">Services</button>",
+      "css": ".ds-pill-nav { background: #F3F4F6; color: #0A0A0A; padding: 8px 16px; border-radius: 9999px; font-weight: 500; border: none; transition: background 0.2s cubic-bezier(0.4,0,0.2,1); } .ds-pill-nav:hover { background: #E2E5E9; }"
+    },
+    {
+      "name": "Glass Card",
+      "kind": "card",
+      "refersTo": "glass-card",
+      "description": "Floating white stat overlay over a dark mockup background.",
+      "html": "<div class=\"ds-glass-card\"><span class=\"ds-glass-card-value\">$94,529</span><span class=\"ds-glass-card-label\">Total Profit</span></div>",
+      "css": ".ds-glass-card { background: #fff; color: #0A0A0A; border-radius: 16px; padding: 16px 20px; box-shadow: 0 12px 32px rgba(18,2,18,0.18); display: flex; flex-direction: column; gap: 2px; width: fit-content; } .ds-glass-card-value { font-weight: 800; font-size: 1.5rem; line-height: 1; } .ds-glass-card-label { font-size: 0.75rem; color: #6B7280; }"
+    },
+    {
+      "name": "Status Pill",
+      "kind": "chip",
+      "refersTo": "status-pill",
+      "description": "Colored dot + label, maps to item pipeline status. Each of the 7 ItemStatus values gets its own color; only 'listed' uses Signal Magenta.",
+      "html": "<span class=\"ds-status-pill\"><span class=\"ds-status-dot\"></span>Listed</span>",
+      "css": ".ds-status-pill { display: inline-flex; align-items: center; gap: 6px; font-size: 0.75rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: #0A0A0A; } .ds-status-dot { width: 8px; height: 8px; border-radius: 9999px; background: #D71284; }"
+    },
+    {
+      "name": "Stat Block",
+      "kind": "custom",
+      "refersTo": "stat-block",
+      "description": "Large bold number over a small gray caption, no border.",
+      "html": "<div class=\"ds-stat-block\"><span class=\"ds-stat-value\">2K+</span><span class=\"ds-stat-label\">Active Resellers</span></div>",
+      "css": ".ds-stat-block { display: flex; flex-direction: column; } .ds-stat-value { font-weight: 800; font-size: 2rem; line-height: 1.1; color: #0A0A0A; } .ds-stat-label { font-size: 0.75rem; color: #6B7280; margin-top: 2px; }"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Consignment Vault",
+    "overview": "A dark, secure, premium-handling backdrop -- near-black sections with a maroon undertone, like a vault door -- with a single vivid magenta signal used sparingly for value and action: primary CTAs, live-status dots, gradient accents on the one phrase that matters in a headline. The system reads confident and clean, not playful or bouncy; motion should stay restrained. Extracted from three reference screenshots of copyt.io (login, dark hero, light hero) -- colors and type are visual estimates from those images, not pixel-sampled, and should be re-verified against the live site or exact design files before shipping publicly. Concierge inherits Copyt's existing brand system wholesale rather than establishing its own -- it's an extension of the same product, not a rebrand.",
+    "keyCharacteristics": [
+      "Magenta-on-dark / magenta-on-white duality as the strongest, most consistent brand signal across every surface seen",
+      "Pill-shaped (fully rounded) buttons and nav elements everywhere -- no sharp-cornered interactive controls",
+      "A second, larger-radius \"card\" shape reserved for floating stat/glass-card overlays, distinct from the pill radius",
+      "Heavy-weight grotesk display type, restrained body copy",
+      "Sparse, purposeful motion -- confidence over delight"
+    ],
+    "rules": [
+      { "name": "The One Signal Rule", "body": "Magenta means \"act here\" or \"this is live.\" It never appears as decorative fill on static content -- only on CTAs, links, active/live states, and headline emphasis. Of the 7 item pipeline statuses, only 'listed' gets magenta, because that is the one status that is actually live.", "section": "colors" },
+      { "name": "The Casing Split Rule", "body": "Sentence case is the default for headlines and body copy. Full uppercase is reserved for nav items, arrow-suffixed marketing CTAs, and stat/label captions only -- never for paragraph copy.", "section": "typography" },
+      { "name": "The Two-Radius Rule", "body": "If it's clickable, it's a full pill. If it's a content container, it's a 16px card. No other radius values.", "section": "elevation" }
+    ],
+    "dos": [
+      "Do keep every interactive control fully rounded (rounded-full) -- no sharp-cornered buttons, inputs-as-buttons, or nav items.",
+      "Do ration magenta to CTAs, live/active states, and headline emphasis only.",
+      "Do use sentence case as the default text casing; uppercase only for nav, arrow-CTAs, and label/caption text.",
+      "Do reuse the glass-card-over-dark-mockup pattern for anything showing a \"live system\" metric (item counts, profit totals, sync status)."
+    ],
+    "donts": [
+      "Don't use the 16px card radius on anything clickable -- cards are for content containment, pills are for interaction.",
+      "Don't add shadows to flat in-page-flow sections; shadows are reserved for the floating glass-card pattern only.",
+      "Don't treat the hex values in this file as pixel-exact -- no color-sampling tool was available when this was authored; re-verify against the live site or design files before using them in anything customer-facing beyond this MVP."
+    ]
+  }
+}
