@@ -10,7 +10,7 @@ export default async function SignupPage({
   const { error } = await searchParams;
 
   return (
-    <main className="grid min-h-[calc(100vh-73px)] md:grid-cols-2">
+    <main className="grid md:min-h-[calc(100vh-73px)] md:grid-cols-2">
       <div className="hidden flex-col justify-between bg-vault-surface px-12 py-16 text-white md:flex">
         <p className="font-display text-lg font-extrabold">
           copyt <span className="text-brand-magenta">concierge</span>

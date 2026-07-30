@@ -61,8 +61,8 @@ export default async function OpsAuthenticationPage({
       <Card className="mt-6">
         <div className="divide-y divide-brand-grayPill">
           {queue.map((item) => (
-            <div key={item.id} className="flex items-center justify-between py-4 text-sm">
-              <div>
+            <div key={item.id} className="flex flex-wrap items-center justify-between gap-3 py-4 text-sm">
+              <div className="min-w-0">
                 <p className="font-medium text-brand-black">{item.description}</p>
                 <p className="text-xs text-brand-gray">
                   {item.sku} · intake {new Date(item.intake_at).toLocaleDateString()}

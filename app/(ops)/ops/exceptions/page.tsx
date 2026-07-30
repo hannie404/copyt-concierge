@@ -55,8 +55,8 @@ export default async function OpsExceptionsPage() {
       <Card className="mt-6">
         <div className="divide-y divide-brand-grayPill">
           {exceptions.map((exc) => (
-            <div key={exc.id} className="flex items-center justify-between py-4 text-sm">
-              <div>
+            <div key={exc.id} className="flex flex-wrap items-center justify-between gap-3 py-4 text-sm">
+              <div className="min-w-0">
                 <p className="font-medium text-brand-black">{exc.item}</p>
                 <p className="mt-0.5 inline-flex items-center gap-1.5 text-xs text-status-flagged">
                   <span className="h-1.5 w-1.5 rounded-full bg-status-flagged" />

@@ -21,17 +21,17 @@ export default async function DashboardPage() {
         </Link>
       </div>
 
-      <div className="mt-8 flex flex-wrap divide-x divide-brand-grayPill">
-        <div className="pr-10">
+      <div className="mt-8 grid grid-cols-2 gap-x-6 gap-y-6 sm:flex sm:flex-wrap sm:gap-0 sm:divide-x sm:divide-brand-grayPill">
+        <div className="sm:pr-10">
           <StatBlock value={String(stats.inTransit)} label="In transit" />
         </div>
-        <div className="px-10">
+        <div className="sm:px-10">
           <StatBlock value={String(stats.listed)} label="Listed" />
         </div>
-        <div className="px-10">
+        <div className="sm:px-10">
           <StatBlock value={String(stats.sold)} label="Sold" />
         </div>
-        <div className="pl-10">
+        <div className="sm:pl-10">
           <StatBlock value={String(stats.paid)} label="Paid out" />
         </div>
       </div>
@@ -59,7 +59,7 @@ export default async function DashboardPage() {
               <Link
                 key={item.id}
                 href={`/items/${item.id}`}
-                className="flex items-center justify-between py-3 text-sm hover:text-brand-magenta"
+                className="flex flex-wrap items-center justify-between gap-x-3 gap-y-1 py-3 text-sm hover:text-brand-magenta"
               >
                 <span className="text-brand-black">{item.description}</span>
                 <div className="flex items-center gap-6">

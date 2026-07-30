@@ -5,6 +5,7 @@ export default function MarketingLayout({ children }: { children: React.ReactNod
   return (
     <>
       <Nav />
+      <div className="h-[73px] md:hidden" aria-hidden="true" />
       {children}
       <Footer />
     </>

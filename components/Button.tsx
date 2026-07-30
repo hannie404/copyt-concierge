@@ -18,7 +18,7 @@ export function Button({
   ...props
 }: ButtonProps) {
   const base =
-    "inline-flex items-center gap-2 rounded-full px-8 py-3.5 font-display font-bold transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-magenta focus-visible:ring-offset-2";
+    "inline-flex items-center gap-2 rounded-full px-5 py-2.5 text-sm md:px-8 md:py-3.5 md:text-base font-display font-bold transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-magenta focus-visible:ring-offset-2";
 
   const variantClasses =
     variant === "primary"

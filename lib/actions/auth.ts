@@ -29,7 +29,7 @@ export async function signUp(formData: FormData) {
   const password = String(formData.get("password") ?? "");
 
   const supabase = await createClient();
-  const { error } = await supabase.auth.signUp({
+  const { data, error } = await supabase.auth.signUp({
     email,
     password,
     options: { data: { name } },
@@ -37,6 +37,14 @@ export async function signUp(formData: FormData) {
 
   if (error) {
     redirect(`/signup?error=${encodeURIComponent(error.message)}`);
+  }
+
+  // Email confirmation is required by default - signUp() doesn't return an
+  // active session until the user confirms, so redirecting straight to
+  // /dashboard here would just bounce them back to /login with no
+  // explanation (middleware blocks unauthenticated portal access).
+  if (!data.session) {
+    redirect("/login?message=Check%20your%20email%20to%20confirm%20your%20account%2C%20then%20sign%20in.");
   }
 
   redirect("/dashboard");

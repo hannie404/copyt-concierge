@@ -74,10 +74,15 @@ export default async function OpsIntakePage({
         <p className="font-display text-lg font-bold text-brand-black">Recently logged</p>
         <div className="mt-4 divide-y divide-brand-grayPill">
           {recent.map((item) => (
-            <div key={item.id} className="flex items-center justify-between py-3 text-sm">
-              <span className="text-brand-black">{item.description}</span>
-              <span className="text-brand-gray">{item.sku}</span>
-              <span className="text-brand-gray">{new Date(item.intake_at).toLocaleDateString()}</span>
+            <div
+              key={item.id}
+              className="grid grid-cols-1 gap-1 py-3 text-sm sm:grid-cols-[2fr_1fr_auto] sm:items-center sm:gap-4"
+            >
+              <span className="truncate text-brand-black">{item.description}</span>
+              <span className="text-xs text-brand-gray sm:text-sm">{item.sku}</span>
+              <span className="text-xs text-brand-gray sm:text-right sm:text-sm">
+                {new Date(item.intake_at).toLocaleDateString()}
+              </span>
             </div>
           ))}
           {recent.length === 0 && (

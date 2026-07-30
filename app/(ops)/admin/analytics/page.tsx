@@ -41,11 +41,11 @@ export default async function AdminAnalyticsPage() {
     <div>
       <h1 className="font-display text-2xl font-extrabold text-brand-black">Analytics</h1>
 
-      <div className="mt-8 flex flex-wrap divide-x divide-brand-grayPill">
+      <div className="mt-8 grid grid-cols-2 gap-x-6 gap-y-6 sm:flex sm:flex-wrap sm:gap-0 sm:divide-x sm:divide-brand-grayPill">
         {throughput.map((stage, i) => (
           <div
             key={stage.stage}
-            className={i === 0 ? "pr-10" : i === throughput.length - 1 ? "pl-10" : "px-10"}
+            className={i === 0 ? "sm:pr-10" : i === throughput.length - 1 ? "sm:pl-10" : "sm:px-10"}
           >
             <StatBlock value={String(stage.value)} label={stage.stage} />
           </div>

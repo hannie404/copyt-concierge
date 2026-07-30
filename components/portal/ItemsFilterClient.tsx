@@ -9,10 +9,21 @@ import { ITEM_STATUS_ORDER } from "@/lib/pipeline";
 import type { PortalItem } from "@/lib/data/items";
 import type { ItemStatus } from "@/lib/queue-names";
 
+const PAGE_SIZE = 15;
+
 export function ItemsFilterClient({ items }: { items: PortalItem[] }) {
   const [filter, setFilter] = useState<ItemStatus | "all">("all");
+  const [page, setPage] = useState(1);
 
   const filtered = items.filter((item) => filter === "all" || item.status === filter);
+  const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
+  const currentPage = Math.min(page, totalPages);
+  const paged = filtered.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE);
+
+  function selectFilter(next: ItemStatus | "all") {
+    setFilter(next);
+    setPage(1);
+  }
 
   if (items.length === 0) {
     return (
@@ -33,7 +44,7 @@ export function ItemsFilterClient({ items }: { items: PortalItem[] }) {
     <>
       <div className="mt-6 flex flex-wrap gap-2">
         <button
-          onClick={() => setFilter("all")}
+          onClick={() => selectFilter("all")}
           className={`rounded-full px-4 py-1.5 text-xs font-bold uppercase tracking-wide transition-colors duration-200 ${
             filter === "all" ? "bg-brand-magenta text-white" : "bg-brand-grayPill text-brand-black"
           }`}
@@ -43,7 +54,7 @@ export function ItemsFilterClient({ items }: { items: PortalItem[] }) {
         {ITEM_STATUS_ORDER.concat("flagged").map((status) => (
           <button
             key={status}
-            onClick={() => setFilter(status)}
+            onClick={() => selectFilter(status)}
             className={`rounded-full px-4 py-1.5 text-xs font-bold uppercase tracking-wide transition-colors duration-200 ${
               filter === status ? "bg-brand-magenta text-white" : "bg-brand-grayPill text-brand-black"
             }`}
@@ -55,13 +66,13 @@ export function ItemsFilterClient({ items }: { items: PortalItem[] }) {
 
       <Card className="mt-6">
         <div className="divide-y divide-brand-grayPill">
-          {filtered.map((item) => (
+          {paged.map((item) => (
             <Link
               key={item.id}
               href={`/items/${item.id}`}
-              className="flex items-center justify-between py-3 text-sm hover:text-brand-magenta"
+              className="flex flex-wrap items-center justify-between gap-x-3 gap-y-1 py-3 text-sm hover:text-brand-magenta"
             >
-              <div>
+              <div className="min-w-0">
                 <span className="text-brand-black">{item.description}</span>
                 <span className="ml-2 text-xs text-brand-gray">{item.sku}</span>
               </div>
@@ -78,6 +89,28 @@ export function ItemsFilterClient({ items }: { items: PortalItem[] }) {
           )}
         </div>
       </Card>
+
+      {totalPages > 1 && (
+        <div className="mt-4 flex items-center justify-between text-sm">
+          <button
+            onClick={() => setPage((p) => Math.max(1, p - 1))}
+            disabled={currentPage <= 1}
+            className="rounded-full border border-brand-grayPill px-4 py-1.5 text-xs font-bold uppercase tracking-wide text-brand-black hover:bg-brand-grayPill disabled:pointer-events-none disabled:text-brand-gray/40"
+          >
+            Previous
+          </button>
+          <span className="text-xs text-brand-gray">
+            Page {currentPage} of {totalPages}
+          </span>
+          <button
+            onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
+            disabled={currentPage >= totalPages}
+            className="rounded-full border border-brand-grayPill px-4 py-1.5 text-xs font-bold uppercase tracking-wide text-brand-black hover:bg-brand-grayPill disabled:pointer-events-none disabled:text-brand-gray/40"
+          >
+            Next
+          </button>
+        </div>
+      )}
     </>
   );
 }

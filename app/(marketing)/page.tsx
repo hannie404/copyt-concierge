@@ -51,9 +51,9 @@ export default function LandingPage() {
           </div>
         </div>
 
-        <div className="mt-16 flex flex-wrap divide-x divide-white/15">
+        <div className="mt-16 grid grid-cols-2 gap-x-6 gap-y-6 sm:flex sm:flex-wrap sm:gap-0 sm:divide-x sm:divide-white/15">
           {STATS.map((stat, i) => (
-            <div key={stat.label} className={i === 0 ? "pr-10" : i === STATS.length - 1 ? "pl-10" : "px-10"}>
+            <div key={stat.label} className={i === 0 ? "sm:pr-10" : i === STATS.length - 1 ? "sm:pl-10" : "sm:px-10"}>
               <StatBlock value={stat.value} label={stat.label} tone="dark" />
             </div>
           ))}
@@ -78,15 +78,12 @@ export default function LandingPage() {
       </Section>
 
       <Section tone="dark">
-        <div className="relative flex min-h-72 items-center justify-center rounded-card bg-black/30 p-6 md:min-h-96 md:p-10">
-          <div className="absolute left-6 top-6 z-10 md:left-10 md:top-10">
+        <div className="flex flex-col items-center gap-4 rounded-card bg-black/30 p-6 md:relative md:block md:min-h-96 md:p-10">
+          <div className="md:absolute md:left-10 md:top-10 md:z-10">
             <GlassCard value="6,216" label="Items Managed" />
           </div>
-          <div className="absolute bottom-6 right-6 z-10 md:bottom-10 md:right-10">
-            <GlassCard value="$94,529" label="Total Profit" />
-          </div>
 
-          <div className="w-full max-w-md rounded-card bg-white p-5 shadow-card-float">
+          <div className="w-full max-w-md rounded-card bg-white p-5 shadow-card-float md:absolute md:left-1/2 md:top-1/2 md:-translate-x-1/2 md:-translate-y-1/2">
             <p className="text-xs font-bold uppercase tracking-wide text-brand-gray">Pipeline</p>
             <div className="mt-3 divide-y divide-brand-grayPill">
               {MOCKUP_ITEMS.map((item) => (
@@ -99,6 +96,10 @@ export default function LandingPage() {
                 </div>
               ))}
             </div>
+          </div>
+
+          <div className="md:absolute md:bottom-10 md:right-10 md:z-10">
+            <GlassCard value="$94,529" label="Total Profit" />
           </div>
         </div>
       </Section>

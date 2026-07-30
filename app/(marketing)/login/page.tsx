@@ -6,12 +6,12 @@ import { signIn } from "@/lib/actions/auth";
 export default async function LoginPage({
   searchParams,
 }: {
-  searchParams: Promise<{ error?: string }>;
+  searchParams: Promise<{ error?: string; message?: string }>;
 }) {
-  const { error } = await searchParams;
+  const { error, message } = await searchParams;
 
   return (
-    <main className="grid min-h-[calc(100vh-73px)] md:grid-cols-2">
+    <main className="grid md:min-h-[calc(100vh-73px)] md:grid-cols-2">
       <div className="hidden flex-col justify-between bg-vault-surface px-12 py-16 text-white md:flex">
         <p className="font-display text-lg font-extrabold">
           copyt <span className="text-brand-magenta">concierge</span>
@@ -36,6 +36,11 @@ export default async function LoginPage({
           {error && (
             <p className="mt-4 rounded-card bg-status-flagged/10 px-4 py-3 text-sm text-status-flagged">
               {error}
+            </p>
+          )}
+          {message && (
+            <p className="mt-4 rounded-card bg-status-sold/10 px-4 py-3 text-sm text-status-sold">
+              {message}
             </p>
           )}
 
