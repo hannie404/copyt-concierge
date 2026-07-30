@@ -7,10 +7,29 @@ async function getPhotographyQueue() {
   const supabase = await createClient();
   const { data } = await supabase
     .from("items")
-    .select("id, sku, description")
+    .select("id, sku, description, user_id")
     .eq("status", "photographed")
     .order("intake_at", { ascending: true });
-  return data ?? [];
+
+  const items = data ?? [];
+
+  return Promise.all(
+    items.map(async (item) => {
+      const { data: files } = await supabase.storage
+        .from("item-photos")
+        .list(`${item.user_id}/${item.id}`, { limit: 1, sortBy: { column: "created_at", order: "desc" } });
+
+      let photoUrl: string | null = null;
+      if (files && files.length > 0) {
+        const { data: signed } = await supabase.storage
+          .from("item-photos")
+          .createSignedUrl(`${item.user_id}/${item.id}/${files[0].name}`, 60 * 60);
+        photoUrl = signed?.signedUrl ?? null;
+      }
+
+      return { ...item, photoUrl };
+    })
+  );
 }
 
 export default async function OpsPhotographyPage({
@@ -44,9 +63,18 @@ export default async function OpsPhotographyPage({
       <div className="mt-6 grid grid-cols-2 gap-4 md:grid-cols-4">
         {queue.map((item) => (
           <Card key={item.id} className="flex flex-col gap-3">
-            <div className="flex aspect-square items-center justify-center rounded-card bg-brand-grayPill text-xs text-brand-gray">
-              No photo yet
-            </div>
+            {item.photoUrl ? (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img
+                src={item.photoUrl}
+                alt={item.description}
+                className="aspect-square w-full rounded-card object-cover"
+              />
+            ) : (
+              <div className="flex aspect-square items-center justify-center rounded-card bg-brand-grayPill text-xs text-brand-gray">
+                No photo yet
+              </div>
+            )}
             <p className="text-sm font-medium text-brand-black">{item.description}</p>
             <p className="text-xs text-brand-gray">{item.sku}</p>
             <form action={uploadItemPhoto} className="flex flex-col gap-2">
@@ -59,7 +87,7 @@ export default async function OpsPhotographyPage({
                 className="text-xs text-brand-gray file:mr-2 file:rounded-full file:border-0 file:bg-brand-grayPill file:px-3 file:py-1.5 file:text-xs file:font-bold file:uppercase"
               />
               <Button type="submit" variant="outline" className="px-4 py-1.5 text-xs">
-                Upload
+                {item.photoUrl ? "Replace photo" : "Upload"}
               </Button>
             </form>
           </Card>
