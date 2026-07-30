@@ -6,6 +6,8 @@ simultaneously, and the moment it sells on any one of them, delists it everywher
 else within seconds. Consignors get paid out on a schedule; staff run the pipeline
 through an internal ops dashboard.
 
+<img width="1441" height="940" alt="image" src="https://github.com/user-attachments/assets/27fdb88e-66ff-487d-b6ba-5f88a102e953" />
+
 ## Why this project
 
 The brief asked me to surprise you rather than build something prescribed, so I chose
