@@ -12,7 +12,7 @@ export default async function LoginPage({
 
   return (
     <main className="grid min-h-[calc(100vh-73px)] md:grid-cols-2">
-      <div className="hidden flex-col justify-between bg-brand-dark px-12 py-16 text-white md:flex">
+      <div className="hidden flex-col justify-between bg-vault-surface px-12 py-16 text-white md:flex">
         <p className="font-display text-lg font-extrabold">
           copyt <span className="text-brand-magenta">concierge</span>
         </p>

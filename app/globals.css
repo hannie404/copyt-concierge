@@ -1,3 +1,23 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* Vault surface: the dark, full-bleed treatment for hero/header sections
+   per DESIGN.md's "Consignment Vault" north star — a faint measuring-grid
+   plus soft magenta glow, matching copyt.io's own dark surfaces (the
+   reference this brand system was extracted from). Reserved for large
+   full-bleed backgrounds; small cards stay on plain brand-dark. */
+.bg-vault-surface {
+  background-color: #120212;
+  background-image:
+    radial-gradient(680px circle at 12% 18%, rgba(215, 18, 132, 0.28), transparent 60%),
+    radial-gradient(560px circle at 88% 82%, rgba(255, 79, 184, 0.16), transparent 60%),
+    linear-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+  background-size:
+    100% 100%,
+    100% 100%,
+    40px 40px,
+    40px 40px;
+  background-position: 0 0;
+}

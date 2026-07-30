@@ -23,8 +23,8 @@ export function PortalShell({
 
   return (
     <div className="flex min-h-screen bg-white">
-      <aside className="hidden w-60 shrink-0 border-r border-brand-grayPill bg-white px-4 py-6 md:block">
-        <Link href="/" className="block px-2 font-display text-base font-extrabold text-brand-black">
+      <aside className="hidden w-60 shrink-0 bg-brand-dark px-4 py-6 md:block">
+        <Link href="/" className="block px-2 font-display text-base font-extrabold text-white">
           copyt <span className="text-brand-magenta">concierge</span>
         </Link>
 
@@ -36,7 +36,7 @@ export function PortalShell({
                 key={item.href}
                 href={item.href}
                 className={`rounded-full px-4 py-2 text-sm font-medium transition-colors duration-200 ${
-                  active ? "bg-brand-magenta text-white" : "text-brand-black hover:bg-brand-grayPill"
+                  active ? "bg-brand-magenta text-white" : "text-white/80 hover:bg-white/10"
                 }`}
               >
                 {item.label}

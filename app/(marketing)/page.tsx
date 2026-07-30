@@ -4,6 +4,8 @@ import { Button } from "@/components/Button";
 import { StatBlock } from "@/components/StatBlock";
 import { GlassCard } from "@/components/GlassCard";
 import { Card } from "@/components/Card";
+import { StatusPill } from "@/components/StatusPill";
+import { MOCK_ITEMS } from "@/lib/mock-data";
 
 const STATS = [
   { value: "2K+", label: "Active Resellers" },
@@ -11,6 +13,8 @@ const STATS = [
   { value: "6", label: "Platform Integrations" },
   { value: "$75M+", label: "Earned by Users" },
 ];
+
+const MOCKUP_ITEMS = MOCK_ITEMS.slice(0, 4);
 
 const STEPS = [
   { title: "Ship it in", body: "Request a label, pack your items, drop them off. We handle intake and cataloging." },
@@ -74,16 +78,28 @@ export default function LandingPage() {
       </Section>
 
       <Section tone="dark">
-        <div className="relative flex h-72 items-center justify-center rounded-card bg-black/30 md:h-96">
-          <div className="absolute left-6 top-6 md:left-10 md:top-10">
+        <div className="relative flex min-h-72 items-center justify-center rounded-card bg-black/30 p-6 md:min-h-96 md:p-10">
+          <div className="absolute left-6 top-6 z-10 md:left-10 md:top-10">
             <GlassCard value="6,216" label="Items Managed" />
           </div>
-          <div className="absolute bottom-6 right-6 md:bottom-10 md:right-10">
+          <div className="absolute bottom-6 right-6 z-10 md:bottom-10 md:right-10">
             <GlassCard value="$94,529" label="Total Profit" />
           </div>
-          <p className="px-6 text-center font-display text-xl font-bold text-white/50 md:text-2xl">
-            Live pipeline dashboard mockup
-          </p>
+
+          <div className="w-full max-w-md rounded-card bg-white p-5 shadow-card-float">
+            <p className="text-xs font-bold uppercase tracking-wide text-brand-gray">Pipeline</p>
+            <div className="mt-3 divide-y divide-brand-grayPill">
+              {MOCKUP_ITEMS.map((item) => (
+                <div key={item.id} className="flex items-center justify-between gap-3 py-3">
+                  <div className="min-w-0">
+                    <p className="truncate text-sm font-medium text-brand-black">{item.name}</p>
+                    <p className="text-xs text-brand-gray">{item.sku}</p>
+                  </div>
+                  <StatusPill status={item.status} />
+                </div>
+              ))}
+            </div>
+          </div>
         </div>
       </Section>
 
