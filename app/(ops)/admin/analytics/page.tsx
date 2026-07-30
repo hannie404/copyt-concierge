@@ -1,26 +1,53 @@
 import { Card } from "@/components/Card";
 import { StatBlock } from "@/components/StatBlock";
+import { createClient } from "@/lib/supabase/server";
 
-const THROUGHPUT = [
-  { stage: "Received", value: "38" },
-  { stage: "Authenticating", value: "12" },
-  { stage: "Photographed", value: "9" },
-  { stage: "Listed", value: "156" },
-  { stage: "Sold (30d)", value: "47" },
-];
+const SLA_THRESHOLD_HOURS = 48;
 
-export default function AdminAnalyticsPage() {
+async function getAnalytics() {
+  const supabase = await createClient();
+  const thirtyDaysAgo = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString();
+  const slaThreshold = new Date(Date.now() - SLA_THRESHOLD_HOURS * 60 * 60 * 1000).toISOString();
+
+  const [{ data: items }, { data: recentSales }, { data: breaching }] = await Promise.all([
+    supabase.from("items").select("status"),
+    supabase.from("sales").select("sale_price").gte("sold_at", thirtyDaysAgo),
+    supabase
+      .from("items")
+      .select("id")
+      .in("status", ["received", "authenticating"])
+      .lt("intake_at", slaThreshold),
+  ]);
+
+  const countByStatus = (status: string) => (items ?? []).filter((i) => i.status === status).length;
+
+  const throughput = [
+    { stage: "Received", value: countByStatus("received") },
+    { stage: "Authenticating", value: countByStatus("authenticating") },
+    { stage: "Photographed", value: countByStatus("photographed") },
+    { stage: "Listed", value: countByStatus("listed") },
+    { stage: "Sold (30d)", value: (recentSales ?? []).length },
+  ];
+
+  const grossSales = (recentSales ?? []).reduce((sum, s) => sum + Number(s.sale_price), 0);
+
+  return { throughput, slaBreaches: (breaching ?? []).length, grossSales };
+}
+
+export default async function AdminAnalyticsPage() {
+  const { throughput, slaBreaches, grossSales } = await getAnalytics();
+
   return (
     <div>
       <h1 className="font-display text-2xl font-extrabold text-brand-black">Analytics</h1>
 
       <div className="mt-8 flex flex-wrap divide-x divide-brand-grayPill">
-        {THROUGHPUT.map((stage, i) => (
+        {throughput.map((stage, i) => (
           <div
             key={stage.stage}
-            className={i === 0 ? "pr-10" : i === THROUGHPUT.length - 1 ? "pl-10" : "px-10"}
+            className={i === 0 ? "pr-10" : i === throughput.length - 1 ? "pl-10" : "px-10"}
           >
-            <StatBlock value={stage.value} label={stage.stage} />
+            <StatBlock value={String(stage.value)} label={stage.stage} />
           </div>
         ))}
       </div>
@@ -28,13 +55,20 @@ export default function AdminAnalyticsPage() {
       <div className="mt-10 grid gap-6 md:grid-cols-2">
         <Card>
           <p className="font-display text-lg font-bold text-brand-black">SLA breaches</p>
-          <p className="mt-4 font-display text-3xl font-extrabold text-status-flagged">3</p>
-          <p className="mt-1 text-sm text-brand-gray">Items past their pipeline-stage SLA this week.</p>
+          <p className="mt-4 font-display text-3xl font-extrabold text-status-flagged">{slaBreaches}</p>
+          <p className="mt-1 text-sm text-brand-gray">
+            Items past the {SLA_THRESHOLD_HOURS}h authentication SLA, currently.
+          </p>
         </Card>
         <Card>
-          <p className="font-display text-lg font-bold text-brand-black">Revenue (30d)</p>
-          <p className="mt-4 font-display text-3xl font-extrabold text-brand-black">$94,529</p>
-          <p className="mt-1 text-sm text-brand-gray">Total commission earned across all platforms.</p>
+          <p className="font-display text-lg font-bold text-brand-black">Gross sales (30d)</p>
+          <p className="mt-4 font-display text-3xl font-extrabold text-brand-black">
+            ${grossSales.toLocaleString(undefined, { minimumFractionDigits: 2 })}
+          </p>
+          <p className="mt-1 text-sm text-brand-gray">
+            Total sale price across all platforms. Commission/take-rate reporting isn&apos;t
+            available yet — no pricing tier data exists in the schema.
+          </p>
         </Card>
       </div>
     </div>

@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { signOut } from "@/lib/actions/auth";
 
 const NAV = [
   { href: "/dashboard", label: "Dashboard" },
@@ -11,7 +12,13 @@ const NAV = [
   { href: "/settings", label: "Settings" },
 ];
 
-export function PortalShell({ children }: { children: React.ReactNode }) {
+export function PortalShell({
+  children,
+  userName,
+}: {
+  children: React.ReactNode;
+  userName: string;
+}) {
   const pathname = usePathname();
 
   return (
@@ -43,8 +50,13 @@ export function PortalShell({ children }: { children: React.ReactNode }) {
         <div className="flex items-center justify-between border-b border-brand-grayPill px-8 py-4">
           <p className="text-sm text-brand-gray">Consignor Portal</p>
           <div className="flex items-center gap-3">
-            <span className="text-sm font-medium text-brand-black">Annie Santos</span>
+            <span className="text-sm font-medium text-brand-black">{userName}</span>
             <div className="h-8 w-8 rounded-full bg-brand-grayPill" aria-hidden="true" />
+            <form action={signOut}>
+              <button className="text-sm font-medium text-brand-gray hover:text-brand-magenta">
+                Sign out
+              </button>
+            </form>
           </div>
         </div>
         <main className="px-8 py-8">{children}</main>

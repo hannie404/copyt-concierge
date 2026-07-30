@@ -1,11 +1,23 @@
 import { notFound } from "next/navigation";
 import { Card } from "@/components/Card";
+import { Button } from "@/components/Button";
 import { StatusPill } from "@/components/StatusPill";
-import { MOCK_ITEMS, ITEM_STATUS_ORDER, PLATFORM_LABELS } from "@/lib/mock-data";
+import { getItemById } from "@/lib/data/items";
+import { ITEM_STATUS_ORDER, PLATFORM_LABELS } from "@/lib/pipeline";
+import { getAdapterMode } from "@/lib/platform-adapter";
+import { simulateSale } from "@/lib/actions/simulate-sale";
+import type { Platform } from "@/lib/queue-names";
 
-export default async function ItemDetailPage({ params }: { params: Promise<{ id: string }> }) {
+export default async function ItemDetailPage({
+  params,
+  searchParams,
+}: {
+  params: Promise<{ id: string }>;
+  searchParams: Promise<{ simulated?: string; error?: string }>;
+}) {
   const { id } = await params;
-  const item = MOCK_ITEMS.find((i) => i.id === id);
+  const { simulated, error } = await searchParams;
+  const item = await getItemById(id);
   if (!item) notFound();
 
   const currentIndex = ITEM_STATUS_ORDER.indexOf(item.status);
@@ -15,11 +27,22 @@ export default async function ItemDetailPage({ params }: { params: Promise<{ id:
     <div>
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="font-display text-2xl font-extrabold text-brand-black">{item.name}</h1>
+          <h1 className="font-display text-2xl font-extrabold text-brand-black">{item.description}</h1>
           <p className="mt-1 text-sm text-brand-gray">{item.sku}</p>
         </div>
         <StatusPill status={item.status} />
       </div>
+
+      {simulated && (
+        <p className="mt-4 rounded-card bg-status-sold/10 px-4 py-3 text-sm text-status-sold">
+          Simulated sale sent — the delisting chain is running, reload in a moment to see the result.
+        </p>
+      )}
+      {error && (
+        <p className="mt-4 rounded-card bg-status-flagged/10 px-4 py-3 text-sm text-status-flagged">
+          {error}
+        </p>
+      )}
 
       <Card className="mt-8">
         <p className="font-display text-lg font-bold text-brand-black">Status tracker</p>
@@ -65,27 +88,45 @@ export default async function ItemDetailPage({ params }: { params: Promise<{ id:
           <dl className="mt-4 space-y-2 text-sm">
             <div className="flex justify-between">
               <dt className="text-brand-gray">Intake date</dt>
-              <dd className="text-brand-black">{item.intakeAt}</dd>
+              <dd className="text-brand-black">{item.intakeAt.slice(0, 10)}</dd>
             </div>
             <div className="flex justify-between">
               <dt className="text-brand-gray">Estimated value</dt>
-              <dd className="text-brand-black">${item.price.toLocaleString()}</dd>
+              <dd className="text-brand-black">
+                {item.estimatedValue != null ? `$${item.estimatedValue.toLocaleString()}` : "—"}
+              </dd>
             </div>
           </dl>
         </Card>
 
         <Card>
           <p className="font-display text-lg font-bold text-brand-black">Live listings</p>
-          {item.platforms.length === 0 ? (
+          {item.listings.length === 0 ? (
             <p className="mt-4 text-sm text-brand-gray">Not listed yet.</p>
           ) : (
-            <ul className="mt-4 space-y-2">
-              {item.platforms.map((platform) => (
-                <li key={platform} className="flex items-center justify-between text-sm">
-                  <span className="text-brand-black">{PLATFORM_LABELS[platform]}</span>
-                  <span className="text-status-listed">Live</span>
-                </li>
-              ))}
+            <ul className="mt-4 space-y-3">
+              {item.listings.map((listing) => {
+                const platform = listing.platform as Platform;
+                const isMock = getAdapterMode(platform) === "mock";
+                return (
+                  <li key={listing.platform} className="flex items-center justify-between text-sm">
+                    <span className="text-brand-black">{PLATFORM_LABELS[platform]}</span>
+                    <div className="flex items-center gap-3">
+                      <span className="text-status-listed">Live</span>
+                      {isMock && (
+                        <form action={simulateSale}>
+                          <input type="hidden" name="itemId" value={item.id} />
+                          <input type="hidden" name="platform" value={platform} />
+                          <input type="hidden" name="redirectTo" value={`/items/${item.id}`} />
+                          <Button type="submit" variant="outline" className="px-4 py-1.5 text-xs">
+                            Simulate sale
+                          </Button>
+                        </form>
+                      )}
+                    </div>
+                  </li>
+                );
+              })}
             </ul>
           )}
         </Card>

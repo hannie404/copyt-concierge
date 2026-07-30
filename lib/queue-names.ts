@@ -6,6 +6,7 @@ export const QUEUE_NAMES = {
   delistEverywhere: "delist-everywhere",
   publishListing: "publish-listing",
   notifyStatusChange: "notify-status-change",
+  authScore: "auth-score",
 } as const;
 
 export const CRON_JOB_NAMES = {

@@ -3,10 +3,12 @@ import { StatBlock } from "@/components/StatBlock";
 import { Card } from "@/components/Card";
 import { StatusPill } from "@/components/StatusPill";
 import { Button } from "@/components/Button";
-import { MOCK_DASHBOARD_STATS, MOCK_ITEMS } from "@/lib/mock-data";
+import { getItemsForCurrentUser, getDashboardStats } from "@/lib/data/items";
 
-export default function DashboardPage() {
-  const recent = MOCK_ITEMS.slice(0, 5);
+export default async function DashboardPage() {
+  const items = await getItemsForCurrentUser();
+  const stats = await getDashboardStats(items);
+  const recent = items.slice(0, 5);
 
   return (
     <div>
@@ -21,16 +23,16 @@ export default function DashboardPage() {
 
       <div className="mt-8 flex flex-wrap divide-x divide-brand-grayPill">
         <div className="pr-10">
-          <StatBlock value={String(MOCK_DASHBOARD_STATS.inTransit)} label="In transit" />
+          <StatBlock value={String(stats.inTransit)} label="In transit" />
         </div>
         <div className="px-10">
-          <StatBlock value={String(MOCK_DASHBOARD_STATS.listed)} label="Listed" />
+          <StatBlock value={String(stats.listed)} label="Listed" />
         </div>
         <div className="px-10">
-          <StatBlock value={String(MOCK_DASHBOARD_STATS.sold)} label="Sold" />
+          <StatBlock value={String(stats.sold)} label="Sold" />
         </div>
         <div className="pl-10">
-          <StatBlock value={String(MOCK_DASHBOARD_STATS.paid)} label="Paid out" />
+          <StatBlock value={String(stats.paid)} label="Paid out" />
         </div>
       </div>
 
@@ -42,21 +44,34 @@ export default function DashboardPage() {
           </Link>
         </div>
 
-        <div className="mt-4 divide-y divide-brand-grayPill">
-          {recent.map((item) => (
-            <Link
-              key={item.id}
-              href={`/items/${item.id}`}
-              className="flex items-center justify-between py-3 text-sm hover:text-brand-magenta"
-            >
-              <span className="text-brand-black">{item.name}</span>
-              <div className="flex items-center gap-6">
-                <span className="text-brand-gray">${item.price.toLocaleString()}</span>
-                <StatusPill status={item.status} />
-              </div>
+        {recent.length === 0 ? (
+          <div className="py-10 text-center">
+            <p className="text-sm text-brand-gray">No items yet.</p>
+            <Link href="/intake/new" className="mt-3 inline-block">
+              <Button variant="outline" arrow>
+                Start your first intake
+              </Button>
             </Link>
-          ))}
-        </div>
+          </div>
+        ) : (
+          <div className="mt-4 divide-y divide-brand-grayPill">
+            {recent.map((item) => (
+              <Link
+                key={item.id}
+                href={`/items/${item.id}`}
+                className="flex items-center justify-between py-3 text-sm hover:text-brand-magenta"
+              >
+                <span className="text-brand-black">{item.description}</span>
+                <div className="flex items-center gap-6">
+                  <span className="text-brand-gray">
+                    {item.estimatedValue != null ? `$${item.estimatedValue.toLocaleString()}` : "—"}
+                  </span>
+                  <StatusPill status={item.status} />
+                </div>
+              </Link>
+            ))}
+          </div>
+        )}
       </Card>
     </div>
   );

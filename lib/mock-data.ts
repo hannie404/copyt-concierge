@@ -24,28 +24,6 @@ export const MOCK_ITEMS: MockItem[] = [
   { id: "itm_1035", sku: "SKU-1035", name: "Cartier Love Bracelet", status: "listed", intakeAt: "2026-07-19", price: 5400, platforms: ["stockx"] },
 ];
 
-export const ITEM_STATUS_ORDER: ItemStatus[] = [
-  "received",
-  "authenticating",
-  "photographed",
-  "listed",
-  "sold",
-  "paid",
-];
-
-export const MOCK_DASHBOARD_STATS = {
-  inTransit: 3,
-  listed: 12,
-  sold: 47,
-  paid: 44,
-};
-
-export const MOCK_PAYOUTS = [
-  { id: "po_2201", date: "2026-07-24", amount: 1284.5, method: "Bank •••• 4821", status: "Paid" },
-  { id: "po_2189", date: "2026-07-17", amount: 962.0, method: "Bank •••• 4821", status: "Paid" },
-  { id: "po_2177", date: "2026-07-10", amount: 2110.75, method: "Bank •••• 4821", status: "Paid" },
-];
-
 export const MOCK_SALES = [
   { id: "sale_881", item: "Supreme Box Logo Hoodie", platform: "eBay" as const, price: 640, soldAt: "2026-07-29 14:02", delisted: ["StockX", "Whatnot", "POS"] },
   { id: "sale_880", item: "Air Jordan 1 Chicago", platform: "StockX" as const, price: 410, soldAt: "2026-07-29 11:37", delisted: ["eBay", "Whatnot"] },
@@ -73,10 +51,3 @@ export const MOCK_INTEGRATIONS = [
   { platform: "Supabase Queues (pgmq)", status: "healthy" as const, rateLimit: "4 queues active" },
   { platform: "pg_cron", status: "healthy" as const, rateLimit: "4 scheduled jobs" },
 ];
-
-export const PLATFORM_LABELS: Record<Platform, string> = {
-  stockx: "StockX",
-  ebay: "eBay",
-  whatnot: "Whatnot",
-  pos: "POS",
-};

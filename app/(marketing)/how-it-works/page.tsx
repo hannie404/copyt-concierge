@@ -1,7 +1,7 @@
 import { Section } from "@/components/Section";
 import { StatusPill } from "@/components/StatusPill";
 import { Card } from "@/components/Card";
-import { ITEM_STATUS_ORDER } from "@/lib/mock-data";
+import { ITEM_STATUS_ORDER } from "@/lib/pipeline";
 
 const STEP_COPY: Record<string, string> = {
   received: "Your item arrives at our facility and is logged against your shipping label — you get a confirmation instantly.",

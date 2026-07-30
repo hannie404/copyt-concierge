@@ -1,6 +1,8 @@
 import Link from "next/link";
 import { Button } from "@/components/Button";
 import { PillNavItem } from "@/components/PillNavItem";
+import { createClient } from "@/lib/supabase/server";
+import { signOut } from "@/lib/actions/auth";
 
 const LINKS = [
   { href: "/how-it-works", label: "How it works" },
@@ -9,7 +11,12 @@ const LINKS = [
   { href: "/faq", label: "FAQ" },
 ];
 
-export function Nav() {
+export async function Nav() {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
   return (
     <header className="w-full border-b border-brand-grayPill bg-white">
       <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
@@ -25,16 +32,29 @@ export function Nav() {
           ))}
         </nav>
 
-        <div className="flex items-center gap-4">
-          <Link href="/login" className="text-sm font-medium text-brand-black hover:text-brand-magenta">
-            Sign in
-          </Link>
-          <Link href="/signup">
-            <Button variant="primary" uppercase arrow>
-              Get started
-            </Button>
-          </Link>
-        </div>
+        {user ? (
+          <div className="flex items-center gap-4">
+            <Link href="/dashboard" className="text-sm font-medium text-brand-black hover:text-brand-magenta">
+              Dashboard
+            </Link>
+            <form action={signOut}>
+              <button className="text-sm font-medium text-brand-gray hover:text-brand-magenta">
+                Sign out
+              </button>
+            </form>
+          </div>
+        ) : (
+          <div className="flex items-center gap-4">
+            <Link href="/login" className="text-sm font-medium text-brand-black hover:text-brand-magenta">
+              Sign in
+            </Link>
+            <Link href="/signup">
+              <Button variant="primary" uppercase arrow>
+                Get started
+              </Button>
+            </Link>
+          </div>
+        )}
       </div>
     </header>
   );

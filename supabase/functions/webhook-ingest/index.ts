@@ -1,6 +1,10 @@
 // Supabase Edge Function: pops from the webhook-ingest pgmq queue (fed by
 // app/api/webhooks/[platform]/route.ts), parses the payload, and - for a
-// "sold" event - enqueues to delist-everywhere. See SPEC.md §6, BUILD_PROMPTS.md Phase 7.
+// "sold" event - enqueues to delist-everywhere. See SPEC.md §6, Phase 7.
+//
+// Normalized interim event contract (no real StockX/eBay/Whatnot sandbox docs
+// exist yet, so this stands in until Phase 7+ gets real credentials):
+//   payload = { event: "sale", itemId: string, salePrice: number }
 
 import { createClient } from "jsr:@supabase/supabase-js@2";
 
@@ -10,11 +14,13 @@ const supabase = createClient(
 );
 
 Deno.serve(async () => {
-  const { data, error } = await supabase
-    .schema("pgmq_public")
-    .rpc("pop", { queue_name: "webhook-ingest" });
+  const { data, error } = await supabase.rpc("pgmq_pop", { queue_name: "webhook-ingest" });
 
-  if (error || !data?.length) {
+  if (error) {
+    console.error("[webhook-ingest] pop failed", error);
+    return new Response(JSON.stringify({ ok: false, error: error.message }), { status: 500 });
+  }
+  if (!data?.length) {
     return new Response(JSON.stringify({ ok: true, processed: 0 }), { status: 200 });
   }
 
@@ -24,12 +30,14 @@ Deno.serve(async () => {
     payload: Record<string, unknown>;
   };
 
-  // TODO: map each platform's webhook shape to a normalized event.
-  // For a sale event, enqueue delist-everywhere with the item id + platform sold on.
   if (payload?.event === "sale") {
-    await supabase.schema("pgmq_public").rpc("send", {
+    await supabase.rpc("pgmq_send", {
       queue_name: "delist-everywhere",
-      message: { itemId: payload.itemId, soldOnPlatform: platform },
+      message: {
+        itemId: payload.itemId,
+        soldOnPlatform: platform,
+        salePrice: payload.salePrice,
+      },
     });
   }
 

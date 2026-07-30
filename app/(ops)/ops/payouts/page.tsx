@@ -1,40 +1,82 @@
 import { Card } from "@/components/Card";
 import { StatBlock } from "@/components/StatBlock";
+import { createClient } from "@/lib/supabase/server";
 
-const BATCHES = [
-  { id: "batch_318", runDate: "2026-07-24", recipients: 38, total: 24810.5, status: "Completed" },
-  { id: "batch_305", runDate: "2026-07-17", recipients: 31, total: 18220.0, status: "Completed" },
-  { id: "batch_292", runDate: "2026-07-10", recipients: 29, total: 21540.75, status: "Completed" },
-];
+const STATUS_LABEL: Record<string, string> = {
+  paid: "Paid",
+  pending: "Pending",
+  blocked: "Blocked — no payout account",
+  failed: "Failed",
+};
 
-export default function OpsPayoutsPage() {
+const STATUS_COLOR: Record<string, string> = {
+  paid: "text-status-paid",
+  pending: "text-status-authenticating",
+  blocked: "text-status-flagged",
+  failed: "text-status-flagged",
+};
+
+async function getPayouts() {
+  const supabase = await createClient();
+  const { data } = await supabase
+    .from("payouts")
+    .select("id, amount, status, paid_at, error, profiles(name)")
+    .order("paid_at", { ascending: false, nullsFirst: false });
+
+  return (data ?? []).map((p) => ({
+    id: p.id,
+    amount: Number(p.amount),
+    status: p.status,
+    paidAt: p.paid_at as string | null,
+    error: p.error as string | null,
+    consignor: (p.profiles as unknown as { name: string | null } | null)?.name ?? "Unknown",
+  }));
+}
+
+export default async function OpsPayoutsPage() {
+  const payouts = await getPayouts();
+
+  const pendingCount = payouts.filter((p) => p.status === "pending" || p.status === "blocked").length;
+  const paidTotal = payouts.filter((p) => p.status === "paid").reduce((sum, p) => sum + p.amount, 0);
+
   return (
     <div>
-      <h1 className="font-display text-2xl font-extrabold text-brand-black">Payout batches</h1>
+      <h1 className="font-display text-2xl font-extrabold text-brand-black">Payouts</h1>
+      <p className="mt-1 text-sm text-brand-gray">
+        Weekly batch, wired to real Stripe Connect transfers (test mode).
+      </p>
 
       <div className="mt-8 flex flex-wrap divide-x divide-brand-grayPill">
         <div className="pr-10">
-          <StatBlock value="Aug 3" label="Next batch run" />
+          <StatBlock value={`$${paidTotal.toLocaleString(undefined, { minimumFractionDigits: 2 })}`} label="Paid out" />
         </div>
         <div className="pl-10">
-          <StatBlock value="41" label="Consignors queued" />
+          <StatBlock value={String(pendingCount)} label="Awaiting payout" />
         </div>
       </div>
 
       <Card className="mt-8">
         <div className="divide-y divide-brand-grayPill">
-          {BATCHES.map((batch) => (
-            <div key={batch.id} className="flex items-center justify-between py-4 text-sm">
+          {payouts.map((payout) => (
+            <div key={payout.id} className="flex items-center justify-between py-4 text-sm">
               <div>
-                <p className="font-medium text-brand-black">{batch.runDate}</p>
-                <p className="text-xs text-brand-gray">{batch.recipients} recipients</p>
+                <p className="font-medium text-brand-black">{payout.consignor}</p>
+                <p className="text-xs text-brand-gray">
+                  {payout.paidAt ? new Date(payout.paidAt).toLocaleDateString() : "Not yet paid"}
+                  {payout.error && ` · ${payout.error}`}
+                </p>
               </div>
-              <span className="text-status-paid">{batch.status}</span>
+              <span className={STATUS_COLOR[payout.status] ?? "text-brand-gray"}>
+                {STATUS_LABEL[payout.status] ?? payout.status}
+              </span>
               <span className="font-medium text-brand-black">
-                ${batch.total.toLocaleString(undefined, { minimumFractionDigits: 2 })}
+                ${payout.amount.toLocaleString(undefined, { minimumFractionDigits: 2 })}
               </span>
             </div>
           ))}
+          {payouts.length === 0 && (
+            <p className="py-6 text-center text-sm text-brand-gray">No payouts yet.</p>
+          )}
         </div>
       </Card>
     </div>

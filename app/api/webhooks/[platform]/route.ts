@@ -17,7 +17,7 @@ export async function POST(
   // BUILD_PROMPTS.md "what I need from you").
 
   const supabase = await createClient();
-  const { error } = await supabase.schema("pgmq_public").rpc("send", {
+  const { error } = await supabase.rpc("pgmq_send", {
     queue_name: QUEUE_NAMES.webhookIngest,
     message: { platform, payload, receivedAt: new Date().toISOString() },
   });
