@@ -17,6 +17,12 @@ export async function Nav() {
     data: { user },
   } = await supabase.auth.getUser();
 
+  let isStaff = false;
+  if (user) {
+    const { data: profile } = await supabase.from("profiles").select("role").eq("id", user.id).single();
+    isStaff = profile?.role === "staff" || profile?.role === "admin";
+  }
+
   return (
     <header className="w-full border-b border-brand-grayPill bg-white">
       <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
@@ -34,8 +40,11 @@ export async function Nav() {
 
         {user ? (
           <div className="flex items-center gap-4">
-            <Link href="/dashboard" className="text-sm font-medium text-brand-black hover:text-brand-magenta">
-              Dashboard
+            <Link
+              href={isStaff ? "/ops/intake" : "/dashboard"}
+              className="text-sm font-medium text-brand-black hover:text-brand-magenta"
+            >
+              {isStaff ? "Staff console" : "Dashboard"}
             </Link>
             <form action={signOut}>
               <button className="text-sm font-medium text-brand-gray hover:text-brand-magenta">
